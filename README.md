@@ -1,54 +1,58 @@
-# JPortAudio - audio I/O for Java
+# PortAudio for beatoraja
+This forked project helps to provide portaudio support to beatoraja in MACOS and LINUX.
 
-JPortAudio is a Java wrapper for the [PortAudio](https://github.com/PortAudio/portaudio) audio library.
-It provides blocking read/write streams.
-JPortAudio can provide high resolution, eg. FLOAT data
-and multi-channel streams that JavaSound does not support.
+Thanks to Phil Burk!
 
-## Building and testing JPortAudio
+## HOW TO?
+### Install portaudio in OS(current stable version: 19.7.0)
+```
+# In MACOS using homebrew package manager
+brew install portaudio
+```
 
-### Cleaning out Old JPortAudio on MacOS
-
-You may have an old installation of JPortAudio. You can remove it.
-
-    rm $HOME/Library/Java/Extensions/jportaudio.jar
-    rm $HOME/Library/Java/Extensions/libjportaudio.jnilib
-
-### Build PortAudio
-
-You can download PortAudio from [GitHub](https://github.com/PortAudio/portaudio)
-or from the [website](http://files.portaudio.com/download.html).
-
-    cd portaudio
-    ./configure
-    make clean
-    make install
-
-### Build JPortAudio native library
-
+### Build portaudio java binded library for Beatoraja.
 On MacOS, you may need to tell CMAKE where to look for stdio.h.
 
-    export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
-    
-This should work on Linux and Mac.
+```
+export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+```
 
-    cd portaudio-java
-    export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/lib
-    cmake .
-    make install
-    ls -l /usr/local/lib/lib*portaudio*
+This should work on Linux and Mac. 
+In macos, Xcode is may be required.
+
+```
+
+# clone this project and move to root directory of project
+cd portaudio-for-beatoraja
+
+# This commend may be depends on your linux platform.
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/lib
+
+cmake .
+make install
+
+# builded library result
+ls -l libjportaudio.dylib
+```
 
 You might need to use "sudo make install".
 
-### Build JPortAudio JAR file
+If you have jni.h not found error, you should modify two files.
+- [./src/main/jni/com_portaudio_PortAudio.h](./src/main/jni/com_portaudio_PortAudio.h), 
+- [./src/main/jni/com_portaudio_BlockingStream.h](./src/main/jni/com_portaudio_BlockingStream.h).
 
-    ./gradlew clean assemble
-    ls -al build/libs # see JAR file
+```c
 
-To use JPortAudio with your projects or IDE, include the JAR file in your classpath.
+# before
+#include <jni.h>
 
-### Test JPortAudio JAR file
+# after
+#include "<your-jdk-path>/Contents/Home/include/jni.h"
+```
 
-Be ready to turn down your speakers. It will play some sine tones that may be loud.
+<your-jdk-path> is depends on your jdk installed path.
+My jdk path is /Library/Java/JavaVirtualMachines/liberica-jdk-18-full.jdk
 
-    ./gradlew clean test
+### Move builded library to Beatoraja
+Just copy libjportaudio.dylib file to root folder of beatoraja!
+And have a fun with portaudio audio option!

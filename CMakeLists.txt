@@ -19,7 +19,7 @@ set (jportaudio_sources
     src/main/jni/jpa_tools.c
     )
 
-set (jportaudio_libname jportaudio_0_1_0)
+set (jportaudio_libname jportaudio)
 
 add_library(${jportaudio_libname} SHARED ${jportaudio_sources})
 target_link_libraries(${jportaudio_libname} portaudio)
